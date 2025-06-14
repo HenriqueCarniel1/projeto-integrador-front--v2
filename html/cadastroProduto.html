@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>XP: Adicionar Produto</title>
+    <link rel="icon" type="image/png" href="img/favicon/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to right, #dff0d8, #f9f9f9);
+            min-height: 100vh;
+        }
+
+        .container-form {
+            max-width: 960px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .left-side {
+            background: #198754;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .left-side img {
+            width: 100px;
+            margin-bottom: 1rem;
+        }
+
+        .right-side {
+            padding: 2rem;
+            background-color: #ffffff;
+        }
+
+        .form-control:focus {
+            border-color: #198754;
+            box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+        }
+
+        .btn-success {
+            background-color: #198754;
+            border-color: #198754;
+        }
+
+        .btn-success:hover {
+            background-color: #146c43;
+            border-color: #146c43;
+        }
+
+        @media (max-width: 768px) {
+            .container-form {
+                flex-direction: column;
+            }
+
+            .left-side,
+            .right-side {
+                width: 100%;
+            }
+
+            .left-side {
+                padding: 1.5rem;
+            }
+
+            .right-side {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-form d-flex flex-wrap">
+        <div class="left-side d-flex flex-column justify-content-center align-items-center w-100 w-md-40">
+            <img src="../img/logo/LogoOficial.png" alt="Logo">
+            <h5>Cadastre seus produtos com facilidade</h5>
+            <p class="mb-4">Adicione informações claras e precisas para atrair mais clientes.</p>
+            <a href="index.html" class="btn btn-light text-success fw-bold">
+                <i class="bi bi-arrow-left me-1"></i> Ver Produtos
+            </a>
+        </div>
+
+        <form id="produtoForm" class="right-side w-100 w-md-60">
+            <h4 class="text-center mb-4 fw-bold">Adicionar Produto</h4>
+
+            <div class="mb-3">
+                <label for="estabelecimento" class="form-label">Estabelecimento</label>
+                <input type="text" class="form-control" id="estabelecimento" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome do Produto</label>
+                <input type="text" class="form-control" id="nome" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="preco" class="form-label">Preço (R$)</label>
+                <input type="text" class="form-control" id="preco" placeholder="Ex: 3.50" required>
+            </div>
+
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="gratis" onchange="togglePreco()">
+                <label class="form-check-label" for="gratis">Grátis</label>
+            </div>
+
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <input type="text" class="form-control" id="descricao" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="numero" class="form-label">WhatsApp</label>
+                <input type="text" class="form-control" id="numero" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="dataHora" class="form-label">Data e Hora de Produção</label>
+                <input type="datetime-local" class="form-control" id="dataHora" required>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-plus-circle me-1"></i> Cadastrar Produto
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function preencherPerfil() {
+            const usuario = localStorage.getItem('usuario');
+            if (usuario) {
+                const usuarioObj = JSON.parse(usuario);
+                document.getElementById('numero').value = usuarioObj.telefone || "";
+                document.getElementById('estabelecimento').value = usuarioObj.nome || "";
+            }
+        }
+
+        function togglePreco() {
+            const preco = document.getElementById('preco');
+            const gratis = document.getElementById('gratis');
+
+            if (gratis.checked) {
+                preco.disabled = true;
+                preco.value = 'Grátis';
+                preco.classList.add('bg-light', 'text-muted');
+            } else {
+                preco.disabled = false;
+                preco.value = '';
+                preco.classList.remove('bg-light', 'text-muted');
+            }
+        }
+        async function cadastrarProduto(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById('nome').value.trim();
+            const estabelecimento = document.getElementById('estabelecimento').value.trim();
+            const precoInput = document.getElementById('preco').value.trim();
+            const descricao = document.getElementById('descricao').value.trim();
+            const numero = document.getElementById('numero').value.trim();
+            const dataHora = document.getElementById('dataHora').value;
+
+            const preco = precoInput.toLowerCase() === 'grátis' ? 0 : parseFloat(precoInput.replace(',', '.'));
+
+            const payload = {
+                nome,
+                estabelecimento,
+                preco,
+                descricao,
+                whatsapp: numero,
+                data_producao: dataHora
+            };
+
+            try {
+                const resposta = await fetch('http://localhost:5000/adicionarproduto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (resposta.ok) {
+                    alert('Produto cadastrado com sucesso!');
+                    document.getElementById('produtoForm').reset();
+                } else {
+                    const erro = await resposta.json();
+                    alert(`Erro ao cadastrar produto: ${erro.message || 'Erro inesperado.'}`);
+                }
+            } catch (erro) {
+                console.error('Erro ao cadastrar produto:', erro);
+                alert('Erro de conexão com o servidor.');
+            }
+        }
+
+        document.getElementById('produtoForm').addEventListener('submit', cadastrarProduto);
+        document.addEventListener('DOMContentLoaded', preencherPerfil);
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
