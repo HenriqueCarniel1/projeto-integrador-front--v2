@@ -100,7 +100,6 @@
     </div>
 
     <div class="form-container">
-        <!-- Lado esquerdo -->
         <div class="left-side">
             <img src="../img/logo/LogoOficial.png" alt="Logo">
             <h4>Bem-vindo!</h4>
@@ -108,47 +107,65 @@
             <button class="btn btn-login" onclick="window.location.href='login.html'">Já tem conta? Entre</button>
         </div>
 
-        <!-- Lado direito (Formulário) -->
         <form id="cadastroForm" class="right-side">
             <h4 class="text-center mb-4 fw-bold">Cadastro de Usuário</h4>
+
             <div class="mb-3">
                 <label for="nome" class="form-label">Nome</label>
                 <input type="text" class="form-control" id="nome" required>
             </div>
+
             <div class="mb-3">
                 <label for="email" class="form-label">E-mail</label>
                 <input type="email" class="form-control" id="email" required>
             </div>
+
             <div class="mb-3">
                 <label for="senha" class="form-label">Senha</label>
                 <input type="password" class="form-control" id="senha" required>
             </div>
+
+            <div class="mb-3">
+                <label for="tipoUsuario" class="form-label">Você é:</label>
+                <select class="form-select" id="tipoUsuario" required>
+                    <option value="">Selecione...</option>
+                    <option value="comprador">Comprador</option>
+                    <option value="vendedor">Vendedor</option>
+                </select>
+            </div>
+
             <div class="mb-3">
                 <label for="cnpj" class="form-label">CNPJ</label>
                 <input type="text" class="form-control" id="cnpj" required>
             </div>
+
             <div class="mb-3">
                 <label for="descricao" class="form-label">Descrição da Loja</label>
                 <textarea class="form-control" id="descricao" rows="2"></textarea>
             </div>
+
             <div class="mb-3">
                 <label for="cep" class="form-label">CEP</label>
                 <input type="text" class="form-control" id="cep" required placeholder="Digite apenas números">
                 <button type="button" class="btn btn-outline-secondary btn-sm mt-2" onclick="buscarCEP()">Buscar
                     Endereço</button>
             </div>
+
             <div class="mb-3">
                 <label for="endereco" class="form-label">Endereço</label>
                 <input type="text" class="form-control" id="endereco" readonly>
             </div>
+
             <div class="mb-3">
                 <label for="telefone" class="form-label">Celular</label>
                 <input type="text" class="form-control" id="telefone" required placeholder="Ex: 61999998888">
             </div>
+
             <div class="mb-3">
                 <label for="horario" class="form-label">Horário de Funcionamento</label>
                 <input type="text" class="form-control" id="horario" placeholder="Ex: Seg a Sex - 08h às 18h">
             </div>
+
             <div class="d-grid mt-3">
                 <button type="submit" class="btn btn-primary">Cadastrar</button>
             </div>
@@ -212,6 +229,7 @@
             const nome = document.getElementById('nome').value;
             const email = document.getElementById('email').value;
             const senha = document.getElementById('senha').value;
+            const tipoUsuario = document.getElementById('tipoUsuario').value;
             const cnpj = document.getElementById('cnpj').value;
             const descricao = document.getElementById('descricao').value;
             const cep = document.getElementById('cep').value;
@@ -222,7 +240,10 @@
             const response = await fetch('http://localhost:5000/criarconta', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome, email, senha, cnpj, descricao, cep, endereco, telefone, horario })
+                body: JSON.stringify({
+                    nome, email, senha, tipoUsuario, cnpj, descricao, cep,
+                    endereco, telefone, horario
+                })
             });
 
             const data = await response.json();
@@ -237,6 +258,7 @@
             }
         });
     </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
