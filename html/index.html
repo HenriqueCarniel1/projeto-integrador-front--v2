@@ -4,49 +4,39 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="img/favicon/favicon.ico">
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <title>XepaSocial</title>
+    <link rel="icon" type="image/png" href="img/favicon/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #f8f9fa;
+            background: #f8f9fa;
         }
 
         .section-title {
             font-weight: 700;
             text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .add-product-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 2rem auto;
-            font-weight: bold;
+            margin-bottom: 2rem
         }
 
         .card img {
             max-height: 180px;
-            object-fit: cover;
+            object-fit: cover
         }
 
         .card {
-            transition: transform 0.2s ease-in-out;
+            transition: transform .2s
         }
 
         .card:hover {
-            transform: scale(1.02);
+            transform: scale(1.02)
         }
 
         .carousel-control-prev-icon,
         .carousel-control-next-icon {
-            background-color: black;
+            background: #000
         }
     </style>
 </head>
@@ -54,57 +44,28 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-success border-bottom shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"><strong>Xepa Social</strong></a>
+            <a class="navbar-brand fw-bold" href="#">Xepa Social</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse">
                 <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a href="../html/quemSomos.html" class="nav-link text-white">Quem Somos?</a>
+                    <li class="nav-item"><a href="../html/quemSomos.html" class="nav-link text-white">Quem Somos?</a>
                     </li>
-                    <li class="nav-item">
-                        <a href="contato.html" class="nav-link text-white">Contato</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="login.html" class="nav-link text-white">Login</a>
-                    </li>
+                    <li class="nav-item"><a href="contato.html" class="nav-link text-white">Contato</a></li>
+                    <li class="nav-item"><a href="login.html" class="nav-link text-white">Login</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="../img/slides/slide01.jpg" class="d-block w-100" alt="Banner 1">
-            </div>
-            <div class="carousel-item">
-                <img src="../img/slides/slide01small.jpg" class="d-block w-100" alt="Banner 2">
-            </div>
-            <div class="carousel-item">
-                <img src="../img/slides/slide02small.jpg" class="d-block w-100" alt="Banner 3">
-            </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Anterior</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Próximo</span>
-        </button>
-    </div>
-
-
     <main class="container mt-5">
-        <div class="row">
-            <div class="col-md-4 mb-4">
+        <div class="row gy-4">
+            <div class="col-md-4">
                 <h3 class="section-title">Adicionar Produto</h3>
                 <a href="cadastroProduto.html" class="btn btn-outline-primary w-100">
                     <i class="bi bi-plus-circle me-2"></i>Adicionar Produto
                 </a>
-
             </div>
 
             <div class="col-md-8">
@@ -114,190 +75,241 @@
         </div>
     </main>
 
-    <!-- Modal de Edição -->
-    <div class="modal fade" id="editarProdutoModal" tabindex="-1" aria-labelledby="editarProdutoModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="editarProdutoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editarProdutoModalLabel">Editar Produto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    <h5 class="modal-title">Editar Produto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <form id="formEditarProduto">
-                        <input type="hidden" id="edit-id">
-                        <div class="mb-3">
-                            <label for="edit-nome" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="edit-nome" required>
+
+                <form id="formEditarProduto" autocomplete="off" class="modal-body">
+                    <input type="hidden" id="edit-id">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-estabelecimento">Estabelecimento</label>
+                            <input class="form-control" id="edit-estabelecimento" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="edit-descricao" class="form-label">Descrição</label>
-                            <textarea class="form-control" id="edit-descricao" required></textarea>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-nome">Nome do Produto</label>
+                            <input class="form-control" id="edit-nome" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="edit-preco" class="form-label">Preço</label>
-                            <input type="number" class="form-control" id="edit-preco" required step="0.01">
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-preco">Preço (R$)</label>
+                            <input class="form-control" id="edit-preco" required>
                         </div>
-                        <button type="submit" class="btn btn-success w-100">Salvar Alterações</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1055; right: 1rem; top: 1rem;">
-        <div id="toastMensagem" class="toast align-items-center text-white bg-success border-0 shadow-lg" role="alert"
-            aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body fw-semibold" id="toastTexto">Mensagem aqui</div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                    aria-label="Fechar"></button>
-            </div>
-        </div>
-    </div>
-
-
-
-
-    <script>
-        let tipoUsuarioRaw = localStorage.getItem('usuario');
-        let tipoUsuario = JSON.parse(tipoUsuarioRaw)?.usuario?.tipo;
-
-        function getAuthHeaders() {
-            const token = localStorage.getItem('authToken');
-            return token ? { Authorization: `Bearer ${token}` } : {};
-        }
-
-        async function atualizarListaDeProdutos() {
-            const token = localStorage.getItem('token');
-
-            try {
-                const response = await fetch('http://localhost:5000/listarprodutos', {
-                    headers: getAuthHeaders()
-                });
-
-                // if (response.status === 401) {
-                //     window.location = 'login.html';
-                //     return;
-                // }
-
-                const produtos = await response.json();
-
-                const container = document.getElementById('produtosContainer');
-                container.innerHTML = '';
-
-                produtos.forEach(produto => {
-                    const card = document.createElement('div');
-                    card.classList.add('col-12', 'col-sm-6', 'col-lg-6', 'mb-4');
-                    card.innerHTML = `
-                        <div class="card h-100 shadow-sm position-relative">
-                            ${tipoUsuario !== 'comprador' ? `
-                                <div class="position-absolute top-0 end-0 m-2 d-flex gap-2">
-                                    <i class="bi bi-pencil-square text-primary" role="button"
-                                        onclick="abrirModalEdicao(${produto.id}, '${produto.nome}', '${produto.descricao}', ${produto.preco})"
-                                        title="Editar Produto"></i>
-                                    <i class="bi bi-trash text-danger" role="button"
-                                        onclick="confirmarExclusaoProduto(${produto.id})"
-                                        title="Excluir Produto"></i>
-                                </div>` : ''}
-                            <img src="${produto.imagem_url}" class="card-img-top" alt="Produto">
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="card-title">${produto.nome}</h5>
-                                <p class="card-text">${produto.descricao}</p>
-                                <p class="card-text fw-bold">R$ ${produto.preco}</p>
-                                <a href="${produto.whatsapp_link}" class="btn btn-outline-success mt-auto" target="_blank">WhatsApp</a>
+                        <div class="col-md-6 d-flex align-items-end">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="edit-gratis">
+                                <label class="form-check-label" for="edit-gratis">Grátis</label>
                             </div>
                         </div>
-                    `;
-                    container.appendChild(card);
-                });
 
-            } catch (error) {
-                console.error('Erro ao carregar produtos:', error);
-            }
+                        <div class="col-12">
+                            <label class="form-label" for="edit-descricao">Descrição</label>
+                            <input class="form-control" id="edit-descricao" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-numero">WhatsApp</label>
+                            <input class="form-control" id="edit-numero" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-data">Data de Vencimento</label>
+                            <input class="form-control" type="date" id="edit-data" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-quantidade">Quantidade</label>
+                            <input class="form-control" type="number" id="edit-quantidade" min="1" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="edit-tipo">Tipo de Produto</label>
+                            <select class="form-select" id="edit-tipo" required>
+                                <option value="">Selecione um tipo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label" for="edit-imagem">Imagem do Produto</label>
+                            <input class="form-control" type="file" id="edit-imagem" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button class="btn btn-success" type="submit">
+                            <i class="bi bi-save me-1"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
+        <div id="toastMensagem" class="toast text-white bg-success border-0 shadow-lg" role="alert">
+            <div class="d-flex">
+                <div id="toastTexto" class="toast-body fw-semibold"></div>
+                <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const BASE = 'http://localhost:5000';
+        const cards = document.getElementById('produtosContainer');
+        const toast = new bootstrap.Toast(document.getElementById('toastMensagem'));
+
+        function auth() {
+            const t = localStorage.getItem('authToken');
+            return t ? { Authorization: `Bearer ${t}` } : {};
         }
-
-        function abrirModalEdicao(id, nome, descricao, preco) {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-nome').value = nome;
-            document.getElementById('edit-descricao').value = descricao;
-            document.getElementById('edit-preco').value = preco;
-
-            const modal = new bootstrap.Modal(document.getElementById('editarProdutoModal'));
-            modal.show();
-        }
-
-        async function confirmarExclusaoProduto(id) {
-            if (!confirm('Tem certeza que deseja excluir este produto?')) return;
-
-            try {
-                const response = await fetch(`http://localhost:5000/deletarproduto/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getAuthHeaders()
-                    }
-                });
-
-                if (response.ok) {
-                    mostrarMensagem('Produto atualizado com sucesso!');
-                    atualizarListaDeProdutos();
-                } else {
-                    mostrarMensagem('Erro ao excluir produto.', 'danger');
-                }
-            } catch (error) {
-                console.error('Erro ao excluir produto:', error);
-            }
-        }
-
-        document.getElementById('formEditarProduto').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const id = document.getElementById('edit-id').value;
-            const nome = document.getElementById('edit-nome').value;
-            const descricao = document.getElementById('edit-descricao').value;
-            const preco = document.getElementById('edit-preco').value;
-
-            try {
-                const response = await fetch(`http://localhost:5000/atualizarproduto/${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...getAuthHeaders()
-                    },
-                    body: JSON.stringify({ nome, descricao, preco })
-                });
-
-                if (response.ok) {
-                    mostrarMensagem('Produto atualizado com sucesso!');
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('editarProdutoModal'));
-                    modal.hide();
-                    atualizarListaDeProdutos();
-                } else {
-                    mostrarMensagem('Erro ao atualizar produto.', 'danger');
-                }
-            } catch (error) {
-                console.error('Erro ao atualizar produto:', error);
-            }
-        });
-
-        function mostrarMensagem(texto, tipo = 'success') {
-            const toastEl = document.getElementById('toastMensagem');
-            const toastTexto = document.getElementById('toastTexto');
-
-            toastTexto.textContent = texto;
-            toastEl.classList.remove('bg-success', 'bg-danger', 'bg-warning');
-            toastEl.classList.add(`bg-${tipo}`);
-
-            const toast = new bootstrap.Toast(toastEl);
+        function showToast(msg, tipo = 'success') {
+            const el = document.getElementById('toastMensagem');
+            el.classList.remove('bg-success', 'bg-danger', 'bg-warning');
+            el.classList.add(`bg-${tipo}`);
+            document.getElementById('toastTexto').textContent = msg;
             toast.show();
         }
 
+        function card(prod) {
+            const col = document.createElement('div');
+            col.className = 'col-12 col-sm-6 col-lg-6 mb-4';
+            col.innerHTML = `
+                <div class="card h-100 shadow-sm position-relative">
+                    <div class="ratio ratio-16x9">
+                    <img class="card-img-top" style="object-fit:cover" 
+                        src="${prod.imagem_url || 'https://via.placeholder.com/400x225?text=Produto'}"
+                        alt="Imagem do produto ${prod.nome}">
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">${prod.nome}</h5>
+                    <p class="card-text"><strong>Preço:</strong> R$ ${prod.preco}</p>
+                    <p class="card-text"><strong>Categoria:</strong> ${prod.tipo_produto}</p>
+                    <p class="card-text"><strong>Vendedor:</strong> ${prod.vendedor}</p>
+                    <p class="card-text"><strong>Validade:</strong> ${prod.data_vencimento}</p>
+                    ${prod.descricao ? `<p class="card-text">${prod.descricao}</p>` : ''}
+                    <a class="btn btn-outline-success mt-auto" href="${prod.whatsapp_link || '#'}" target="_blank">WhatsApp</a>
+                    </div>
+                </div>`;
+            if (prod.pode_editar) {
+                const btns = document.createElement('div');
+                btns.className = 'position-absolute top-0 end-0 m-2 d-flex gap-2';
+                btns.innerHTML = `
+                <i class="bi bi-pencil-square text-primary" style="cursor:pointer" title="Editar"></i>
+                <i class="bi bi-trash text-danger"         style="cursor:pointer" title="Excluir"></i>`;
+                btns.children[0].onclick = () => openEdit(prod);
+                btns.children[1].onclick = () => deletarProduto(prod.id);
+                col.querySelector('.card').append(btns);
+            }
+            return col;
+        }
 
+        async function load() {
+            try {
+                const r = await fetch(`${BASE}/listarprodutos`, { headers: auth() });
+                cards.replaceChildren(...(await r.json()).map(card));
+            } catch (e) { console.error(e) }
+        }
 
-        document.addEventListener('DOMContentLoaded', atualizarListaDeProdutos);
+        function toggleGratis(checkbox, input) {
+            if (checkbox.checked) {
+                input.disabled = true;
+                input.value = 'Grátis';
+                input.classList.add('bg-light', 'text-muted');
+            } else {
+                input.disabled = false;
+                input.value = '';
+                input.classList.remove('bg-light', 'text-muted');
+            }
+        }
+
+        async function loadTipos(select) {
+            if (select.options.length > 1) return;
+            try {
+                const r = await fetch(`${BASE}/tiposproduto`, { headers: auth() });
+                (await r.json()).forEach(t => {
+                    const o = document.createElement('option');
+                    o.value = t.id; o.textContent = t.nome; select.append(o);
+                });
+            } catch (e) { console.error(e) }
+        }
+
+        async function openEdit(prod) {
+            await loadTipos(document.getElementById('edit-tipo'));
+
+            document.getElementById('edit-id').value = prod.id;
+            document.getElementById('edit-estabelecimento').value = prod.estabelecimento ?? '';
+            document.getElementById('edit-nome').value = prod.nome;
+            document.getElementById('edit-descricao').value = prod.descricao ?? '';
+            document.getElementById('edit-preco').value = prod.preco;
+            document.getElementById('edit-numero').value = prod.whatsapp ?? '';
+            document.getElementById('edit-data').value = prod.data_vencimento;
+            document.getElementById('edit-quantidade').value = prod.quantidade ?? 1;
+            document.getElementById('edit-tipo').value = prod.fk_tipo_produto_id ?? '';
+
+            const chk = document.getElementById('edit-gratis');
+            chk.checked = Number(prod.preco) === 0;
+            toggleGratis(chk, document.getElementById('edit-preco'));
+
+            new bootstrap.Modal('#editarProdutoModal').show();
+        }
+
+        document.getElementById('edit-gratis')
+            .addEventListener('change', e => toggleGratis(e.target, document.getElementById('edit-preco')));
+
+        document.getElementById('formEditarProduto').addEventListener('submit', async e => {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const data = new FormData();
+
+            data.append('estabelecimento', document.getElementById('edit-estabelecimento').value.trim());
+            data.append('nome', document.getElementById('edit-nome').value.trim());
+            data.append('descricao', document.getElementById('edit-descricao').value.trim());
+            data.append('whatsapp', document.getElementById('edit-numero').value.trim());
+            data.append('data_vencimento', document.getElementById('edit-data').value);
+            data.append('quantidade', document.getElementById('edit-quantidade').value);
+            data.append('fk_tipo_produto_id', document.getElementById('edit-tipo').value);
+
+            const precoInput = document.getElementById('edit-preco').value.trim();
+            data.append('preco', document.getElementById('edit-gratis').checked ? 0 :
+                parseFloat(precoInput.replace(',', '.')));
+
+            const img = document.getElementById('edit-imagem').files[0];
+            if (img) data.append('imagem', img);
+
+            try {
+                const r = await fetch(`${BASE}/atualizarproduto/${id}`, {
+                    method: 'PUT', headers: auth(), body: data
+                });
+                if (r.ok) {
+                    showToast('Produto atualizado com sucesso!');
+                    bootstrap.Modal.getInstance('#editarProdutoModal').hide();
+                    load();
+                } else {
+                    showToast('Erro ao atualizar.', 'danger');
+                }
+            } catch (err) { console.error(err) }
+        });
+
+        async function deletarProduto(id) {
+            if (!confirm('Tem certeza que deseja excluir?')) return;
+            try {
+                const r = await fetch(`${BASE}/deletarproduto/${id}`, { method: 'DELETE', headers: auth() });
+                if (r.ok) { showToast('Produto excluído!'); load(); }
+                else { showToast('Erro ao excluir.', 'danger'); }
+            } catch (e) { console.error(e) }
+        }
+
+        document.addEventListener('DOMContentLoaded', load);
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
