@@ -59,6 +59,11 @@
                             <i class="bi bi-heart-fill me-1"></i> Favoritos
                         </a>
                     </li>
+                    <li class="nav-item" id="btn-favoritos">
+                        <a href="carrinho.html" class="nav-link text-white d-flex align-items-center">
+                            <i class="bi bi-cart-fill me-1"></i> Carrinho de Compras
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -176,12 +181,33 @@
             const t = localStorage.getItem('authToken');
             return t ? { Authorization: `Bearer ${t}` } : {};
         }
+
         function showToast(msg, tipo = 'success') {
             const el = document.getElementById('toastMensagem');
             el.classList.remove('bg-success', 'bg-danger', 'bg-warning');
             el.classList.add(`bg-${tipo}`);
             document.getElementById('toastTexto').textContent = msg;
             toast.show();
+        }
+
+        function adicionarCarrinho(prodId) {
+            fetch(`${BASE}/adicionar/carrinho/${prodId}`, {
+                method: 'POST',
+                headers: auth()
+            })
+                .then(async r => {
+                    if (r.status === 401) return window.location.href = 'login.html';
+
+                    if (!r.ok) {
+                        const { message = 'Erro ao adicionar.' } = await r.json().catch(() => ({}));
+                        throw new Error(message);
+                    }
+                    showToast('Produto adicionado ao carrinho!');
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast(err.message || 'Erro ao adicionar.', 'danger');
+                });
         }
 
         function adicionarFavoritos(produtoId) {
@@ -251,6 +277,7 @@
             }
 
             const btnCarrinho = col.querySelector('.btn-add-carrinho');
+            btnCarrinho.addEventListener('click', () => adicionarCarrinho(prod.id));
             const btnDesejos = col.querySelector('.btn-add-desejos');
 
             btnCarrinho.addEventListener('click', () => {
