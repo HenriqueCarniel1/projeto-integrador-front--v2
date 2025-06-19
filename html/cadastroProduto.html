@@ -210,7 +210,7 @@
             formData.append('fk_tipo_produto_id', tipoProdutoId);
 
             try {
-                const resposta = await fetch('http://localhost:5000/adicionarproduto', {
+                const resposta = await fetch('https://api-projeto-integrador-v2.onrender.com/adicionarproduto', {
                     method: 'POST',
                     headers: {
                         ...getAuthHeaders()
@@ -233,7 +233,7 @@
 
         async function carregarTiposDeProduto() {
             try {
-                const resposta = await fetch('http://localhost:5000/tiposproduto', {
+                const resposta = await fetch('https://api-projeto-integrador-v2.onrender.com/tiposproduto', {
                     headers: getAuthHeaders()
                 });
 
