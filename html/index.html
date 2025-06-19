@@ -54,6 +54,11 @@
                     </li>
                     <li class="nav-item"><a href="contato.html" class="nav-link text-white">Contato</a></li>
                     <li class="nav-item" id="usuarioNav"></li>
+                    <li class="nav-item" id="btn-favoritos">
+                        <a href="favoritos.html" class="nav-link text-white d-flex align-items-center">
+                            <i class="bi bi-heart-fill me-1"></i> Favoritos
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -61,7 +66,7 @@
 
     <main class="container mt-5">
         <div class="row gy-4">
-            <div class="col-md-4">
+            <div class="col-md-4" id="container-adicionar-produto">
                 <h3 class="section-title">Adicionar Produto</h3>
                 <a href="cadastroProduto.html" class="btn btn-outline-primary w-100">
                     <i class="bi bi-plus-circle me-2"></i>Adicionar Produto
@@ -179,45 +184,100 @@
             toast.show();
         }
 
+        function adicionarFavoritos(produtoId) {
+            fetch(`${BASE}/adicionar/favoritos/${produtoId}`, {
+                method: 'POST',
+                headers: {
+                    ...auth(),
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(async resp => {
+                    if (resp.status === 401) {
+                        return window.location.href = 'login.html';
+                    }
+                    if (!resp.ok) {
+                        const { message = 'Erro ao favoritar.' } = await resp.json().catch(() => ({}));
+                        throw new Error(message);
+                    }
+                    showToast('Produto adicionado aos favoritos!');
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast(err.message || 'Erro ao favoritar.', 'danger');
+                });
+        }
+
         function card(prod) {
             const col = document.createElement('div');
             col.className = 'col-12 col-sm-6 col-lg-6 mb-4';
             col.innerHTML = `
                 <div class="card h-100 shadow-sm position-relative">
                     <div class="ratio ratio-16x9">
-                    <img class="card-img-top" style="object-fit:cover" 
-                        src="${prod.imagem_url || 'https://via.placeholder.com/400x225?text=Produto'}"
-                        alt="Imagem do produto ${prod.nome}">
+                        <img class="card-img-top" style="object-fit:cover" 
+                            src="${prod.imagem_url || 'https://via.placeholder.com/400x225?text=Produto'}"
+                            alt="Imagem do produto ${prod.nome}">
                     </div>
                     <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">${prod.nome}</h5>
-                    <p class="card-text"><strong>Preço:</strong> R$ ${prod.preco}</p>
-                    <p class="card-text"><strong>Categoria:</strong> ${prod.tipo_produto}</p>
-                    <p class="card-text"><strong>Vendedor:</strong> ${prod.vendedor}</p>
-                    <p class="card-text"><strong>Validade:</strong> ${prod.data_vencimento}</p>
-                    ${prod.descricao ? `<p class="card-text">${prod.descricao}</p>` : ''}
-                    <a class="btn btn-outline-success mt-auto" href="${prod.whatsapp_link || '#'}" target="_blank">WhatsApp</a>
+                        <h5 class="card-title">${prod.nome}</h5>
+                        <p class="card-text"><strong>Preço:</strong> R$ ${prod.preco}</p>
+                        <p class="card-text"><strong>Categoria:</strong> ${prod.tipo_produto}</p>
+                        <p class="card-text"><strong>Vendedor:</strong> ${prod.vendedor}</p>
+                        <p class="card-text"><strong>Validade:</strong> ${prod.data_vencimento}</p>
+                        ${prod.descricao ? `<p class="card-text">${prod.descricao}</p>` : ''}
+                        <a class="btn btn-outline-success mb-2" href="${prod.whatsapp_link || '#'}" target="_blank">WhatsApp</a>
+
+                        <button class="btn btn-primary mb-2 btn-add-carrinho">
+                            <i class="bi bi-cart-plus me-1"></i> Adicionar ao Carrinho
+                        </button>
+
+                        <button
+                            class="btn btn-warning text-white btn-add-desejos"
+                                onclick="adicionarFavoritos(${prod.id})">
+                                    <i class="bi bi-heart me-1"></i> Adicionar à Lista de Desejos
+                        </button>
                     </div>
                 </div>`;
+
             if (prod.pode_editar) {
                 const btns = document.createElement('div');
                 btns.className = 'position-absolute top-0 end-0 m-2 d-flex gap-2';
                 btns.innerHTML = `
-                <i class="bi bi-pencil-square text-primary" style="cursor:pointer" title="Editar"></i>
-                <i class="bi bi-trash text-danger"         style="cursor:pointer" title="Excluir"></i>`;
+                    <i class="bi bi-pencil-square text-primary" style="cursor:pointer" title="Editar"></i>
+                    <i class="bi bi-trash text-danger" style="cursor:pointer" title="Excluir"></i>`;
                 btns.children[0].onclick = () => openEdit(prod);
                 btns.children[1].onclick = () => deletarProduto(prod.id);
                 col.querySelector('.card').append(btns);
             }
+
+            const btnCarrinho = col.querySelector('.btn-add-carrinho');
+            const btnDesejos = col.querySelector('.btn-add-desejos');
+
+            btnCarrinho.addEventListener('click', () => {
+                showToast(`"${prod.nome}" adicionado ao carrinho.`);
+            });
+
+            btnDesejos.addEventListener('click', () => {
+                showToast(`"${prod.nome}" adicionado à lista de desejos.`);
+            });
+
             return col;
         }
 
         async function load() {
             try {
                 const r = await fetch(`${BASE}/listarprodutos`, { headers: auth() });
-                cards.replaceChildren(...(await r.json()).map(card));
+
+                if (r.status === 401) {
+                    localStorage.clear();
+                    return window.location.href = 'login.html';
+                }
+
+                const produtos = await r.json();
+                cards.replaceChildren(...produtos.map(card));
 
                 const nav = document.getElementById('usuarioNav');
+                const containerProduto = document.getElementById('container-adicionar-produto');
                 const raw = localStorage.getItem('usuario');
 
                 if (raw) {
@@ -229,16 +289,25 @@
                                     <i class="bi bi-person-circle me-1"></i> ${user.nome}
                                 </a>
                             `;
-                            return;
+                        }
+
+                        if (user?.tipo == "comprador") {
+                            containerProduto.style.display = "none"
                         }
                     } catch (e) {
                         console.warn('Erro ao ler usuário:', e);
                     }
+                } else {
+                    nav.innerHTML = `
+                        <a href="login.html" class="nav-link text-white d-flex align-items-center">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                        </a>
+                    `;
                 }
 
-                nav.innerHTML = `<a href="login.html" class="nav-link text-white">Login</a>`;
+
             } catch (e) {
-                console.error(e)
+                console.error('Erro geral ao carregar produtos:', e);
             }
         }
 

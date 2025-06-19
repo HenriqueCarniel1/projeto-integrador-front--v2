@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>XepaSocial – Favoritos</title>
+
+    <link rel="icon" type="image/png" href="img/favicon/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .section-title {
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .card img {
+            max-height: 180px;
+            object-fit: cover;
+        }
+
+        .card {
+            transition: transform .2s;
+        }
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success border-bottom shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">Xepa Social</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item"><a href="../html/index.html" class="nav-link text-white">Home</a></li>
+                    <li class="nav-item"><a href="quemSomos.html" class="nav-link text-white">Quem Somos?</a></li>
+                    <li class="nav-item"><a href="contato.html" class="nav-link text-white">Contato</a></li>
+                    <li class="nav-item" id="usuarioNav"></li>
+                    <li class="nav-item">
+                        <a href="favoritos.html" class="nav-link text-white d-flex align-items-center active">
+                            <i class="bi bi-heart-fill me-1"></i> Favoritos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5">
+        <h3 class="section-title">Meus Favoritos</h3>
+        <div class="row" id="favoritosContainer"></div>
+    </main>
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index:1055;">
+        <div id="toastMensagem" class="toast text-white bg-success border-0 shadow-lg" role="alert">
+            <div class="d-flex">
+                <div id="toastTexto" class="toast-body fw-semibold"></div>
+                <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const BASE = 'http://localhost:5000';
+        const toast = new bootstrap.Toast(document.getElementById('toastMensagem'));
+        const cards = document.getElementById('favoritosContainer');
+
+        function auth() {
+            const t = localStorage.getItem('authToken');
+            return t ? { Authorization: `Bearer ${t}` } : {};
+        }
+        function showToast(msg, tipo = 'success') {
+            const el = document.getElementById('toastMensagem');
+            el.classList.remove('bg-success', 'bg-danger', 'bg-warning');
+            el.classList.add(`bg-${tipo}`);
+            document.getElementById('toastTexto').textContent = msg;
+            toast.show();
+        }
+
+        function removerFavorito(prodId) {
+            fetch(`${BASE}/deletar/favoritos/${prodId}`, {
+                method: 'DELETE',
+                headers: auth()
+            })
+                .then(r => {
+                    if (r.status === 401) return window.location.href = 'login.html';
+                    if (!r.ok) throw new Error();
+                    showToast('Removido dos favoritos');
+                    document.querySelector(`[data-prod="${prodId}"]`)?.remove();
+                })
+                .catch(() => showToast('Erro ao remover', 'danger'));
+        }
+
+        function card(prod) {
+            const col = document.createElement('div');
+            col.className = 'col-12 col-sm-6 col-lg-6 mb-4';
+            col.dataset.prod = prod.id;
+
+            col.innerHTML = `
+                <div class="card h-100 shadow-sm position-relative">
+                    <div class="ratio ratio-16x9">
+                        <img class="card-img-top" src="${prod.imagem_url || 'https://via.placeholder.com/400x225?text=Produto'}" alt="Imagem do produto ${prod.nome}">
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">${prod.nome}</h5>
+                        <p class="card-text"><strong>Preço:</strong> R$ ${prod.preco}</p>
+                        <p class="card-text"><strong>Categoria:</strong> ${prod.tipo_produto}</p>
+                        <p class="card-text"><strong>Vendedor:</strong> ${prod.vendedor}</p>
+                        <p class="card-text"><strong>Validade:</strong> ${prod.data_vencimento}</p>
+                        ${prod.descricao ? `<p class="card-text">${prod.descricao}</p>` : ''}
+
+                        <a class="btn btn-outline-success mt-auto mb-2" href="${prod.whatsapp_link || '#'}" target="_blank">
+                            <i class="bi bi-whatsapp me-1"></i> WhatsApp
+                        </a>
+                        <button class="btn btn-danger w-100" onclick="removerFavorito(${prod.id})">
+                            <i class="bi bi-x-circle me-1"></i> Remover dos Favoritos
+                        </button>
+                    </div>
+                </div>`;
+            return col;
+        }
+
+        async function load() {
+            try {
+                const r = await fetch(`${BASE}/listar/favoritos`, { headers: auth() });
+
+                if (r.status === 401) {
+                    localStorage.clear();
+                    return window.location.href = 'login.html';
+                }
+                const favoritos = await r.json();
+                cards.replaceChildren(...favoritos.map(card));
+
+                const nav = document.getElementById('usuarioNav');
+                const raw = localStorage.getItem('usuario');
+                if (raw) {
+                    const user = JSON.parse(raw)?.usuario;
+                    if (user?.nome) {
+                        nav.innerHTML = `
+                        <a href="perfil.html" class="nav-link text-white d-flex align-items-center">
+                            <i class="bi bi-person-circle me-1"></i> ${user.nome}
+                        </a>`;
+                    }
+                } else {
+                    nav.innerHTML = `
+                    <a href="login.html" class="nav-link text-white d-flex align-items-center">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                    </a>`;
+                }
+            } catch (e) {
+                console.error(e);
+                showToast('Erro ao carregar favoritos', 'danger');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', load);
+    </script>
+</body>
+
+</html>
