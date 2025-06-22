@@ -360,8 +360,14 @@
                 const btns = document.createElement('div');
                 btns.className = 'position-absolute top-0 end-0 m-2 d-flex gap-2';
                 btns.innerHTML = `
-                    <i class="bi bi-pencil-square text-primary" style="cursor:pointer" title="Editar"></i>
-                    <i class="bi bi-trash text-danger" style="cursor:pointer" title="Excluir"></i>`;
+                    <button class="btn btn-light btn-sm shadow-sm me-1 d-flex align-items-center justify-content-center"
+                            title="Editar" style="width:36px; height:36px; border-radius:50%;">
+                        <i class="bi bi-pencil-square text-primary"></i>
+                    </button>
+                    <button class="btn btn-light btn-sm shadow-sm d-flex align-items-center justify-content-center"
+                            title="Excluir" style="width:36px; height:36px; border-radius:50%;">
+                        <i class="bi bi-trash text-danger"></i>
+                    </button>`;
                 btns.children[0].onclick = () => openEdit(prod);
                 btns.children[1].onclick = () => deletarProduto(prod.id);
                 col.querySelector('.card').append(btns);
