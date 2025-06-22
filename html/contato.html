@@ -39,10 +39,10 @@
         }
 
         .form-container {
-            background: #ffffff;
+            background: #fff;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
             margin-top: 1rem;
         }
 
@@ -52,7 +52,7 @@
 
         .form-control:focus {
             border-color: #00a84c;
-            box-shadow: 0 0 0 0.2rem rgba(0, 168, 76, 0.25);
+            box-shadow: 0 0 0 .2rem rgba(0, 168, 76, .25);
         }
 
         .btn-primary {
@@ -74,7 +74,7 @@
             margin-top: 60px;
         }
 
-        @media (max-width: 767px) {
+        @media(max-width:767px) {
             .form-container {
                 padding: 20px;
             }
@@ -92,15 +92,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="quemSomos.html">Quem Somos?</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">Login</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="quemSomos.html">Quem Somos?</a></li>
+                    <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
                 </ul>
             </div>
         </div>
@@ -113,16 +107,11 @@
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-8">
                 <div class="form-container">
-                    <form action="https://formspree.io/f/mzzbjenn" method="POST">
+                    <form id="contato-form">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nome</label>
                             <input type="text" class="form-control" name="name" id="name"
                                 placeholder="Seu nome completo" required />
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">E-mail</label>
-                            <input type="email" class="form-control" name="email" id="email" placeholder="seu@email.com"
-                                required />
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Mensagem</label>
@@ -138,11 +127,31 @@
         </div>
     </main>
 
-    <footer class="fixed-bottom bg-success text-white text-center py-2 shadow" style="z-index: 1030;">
+    <footer class="fixed-bottom bg-success text-white text-center py-2 shadow" style="z-index:1030;">
         &copy; 2024 XepaSocial. Todos os direitos reservados.
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        emailjs.init('s9alCj7NZis0t1sxl');
+
+        const form = document.getElementById('contato-form');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            emailjs.sendForm('service_lenodlg', 'template_5i839w9', this)
+                .then(() => {
+                    console.log('Mensagem enviada com sucesso! Confira seu e-mail 😉');
+                    form.reset();
+                })
+                .catch(err => {
+                    console.error('Erro:', err);
+                    console.log('Ocorreu um erro ao enviar. Tente novamente.');
+                });
+        });
+    </script>
 </body>
 
 </html>
