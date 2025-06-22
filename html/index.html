@@ -379,6 +379,11 @@
             });
 
         function card(prod) {
+
+            const fone = (prod.telefone_vendedor || '').replace(/\D/g, '');
+            const msg = encodeURIComponent(`Desejo comprar o ${prod.nome}`);
+            const waLink = `https://wa.me/55${fone}?text=${msg}`;
+
             const col = document.createElement('div');
             col.className = 'col-12 col-sm-6 col-lg-6 mb-4';
             col.innerHTML = `
@@ -396,8 +401,12 @@
                         <p class="card-text"><strong>Validade:</strong> ${prod.data_vencimento}</p>
                         ${prod.descricao ? `<p class="card-text">${prod.descricao}</p>` : ''}
 
-                        ${(JSON.parse(localStorage.getItem('usuario'))?.usuario?.tipo !== "vendedor")
-                    ? `<a class="btn btn-outline-success mb-2" href="${prod.whatsapp_link || '#'}" target="_blank">WhatsApp</a>`
+                    ${(JSON.parse(localStorage.getItem('usuario'))?.usuario?.tipo !== "vendedor")
+                    ? `<a class="btn btn-outline-success mb-2"
+                            href="${waLink}"
+                            target="_blank">
+                            WhatsApp
+                        </a>`
                     : ''}
 
                         ${(JSON.parse(localStorage.getItem('usuario'))?.usuario?.tipo !== "vendedor")
