@@ -38,6 +38,68 @@
         .carousel-control-next-icon {
             background: #000
         }
+
+        #banner .carousel-item {
+            height: 250px;
+        }
+
+        #banner img {
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            #banner .carousel-item {
+                height: 380px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            #banner .carousel-item {
+                height: 460px;
+            }
+        }
+
+        #banner .carousel-control-prev,
+        #banner .carousel-control-next {
+            width: 52px;
+            height: 52px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.9;
+            transition: opacity .25s, transform .25s;
+        }
+
+        #banner .carousel-control-prev:hover,
+        #banner .carousel-control-next:hover {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        #banner .carousel-control-prev-icon,
+        #banner .carousel-control-next-icon {
+            background-image: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, .55);
+            color: #fff;
+            font-size: 1.4rem;
+        }
+
+        #banner .carousel-control-prev-icon::before {
+            content: "\f284";
+            font-family: "Bootstrap-icons";
+        }
+
+        #banner .carousel-control-next-icon::before {
+            content: "\f285";
+            font-family: "Bootstrap-icons";
+        }
     </style>
 </head>
 
@@ -68,6 +130,28 @@
             </div>
         </div>
     </nav>
+
+    <div id="banner" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="../img/slides/slide01.jpg" class="d-block w-100" alt="Ofertas Fresquinhas">
+            </div>
+            <div class="carousel-item">
+                <img src="../img/slides/slide02small.jpg" class="d-block w-100" alt="Economize sem Desperdiçar">
+            </div>
+            <div class="carousel-item">
+                <img src="../img/slides/slide04.jpg" class="d-block w-100" alt="Sabor e Sustentabilidade">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#banner" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#banner" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Próximo</span>
+        </button>
+    </div>
 
     <main class="container mt-5">
         <div class="row gy-4">
@@ -251,17 +335,24 @@
                         <p class="card-text"><strong>Vendedor:</strong> ${prod.vendedor}</p>
                         <p class="card-text"><strong>Validade:</strong> ${prod.data_vencimento}</p>
                         ${prod.descricao ? `<p class="card-text">${prod.descricao}</p>` : ''}
-                        <a class="btn btn-outline-success mb-2" href="${prod.whatsapp_link || '#'}" target="_blank">WhatsApp</a>
 
-                        <button class="btn btn-primary mb-2 btn-add-carrinho">
-                            <i class="bi bi-cart-plus me-1"></i> Adicionar ao Carrinho
-                        </button>
+                        ${(JSON.parse(localStorage.getItem('usuario'))?.usuario?.tipo !== "vendedor")
+                    ? `<a class="btn btn-outline-success mb-2" href="${prod.whatsapp_link || '#'}" target="_blank">WhatsApp</a>`
+                    : ''}
 
-                        <button
-                            class="btn btn-warning text-white btn-add-desejos"
+                        ${(JSON.parse(localStorage.getItem('usuario'))?.usuario?.tipo !== "vendedor")
+                    ? `<button class="btn btn-primary mb-2 btn-add-carrinho" id="btn-add-carrinho">
+                                <i class="bi bi-cart-plus me-1"></i> Adicionar ao Carrinho
+                            </button>`
+                    : ''}
+
+                        ${(JSON.parse(localStorage.getItem('usuario'))?.usuario?.tipo !== "vendedor")
+                    ? `<button
+                                class="btn btn-warning text-white btn-add-desejos"
                                 onclick="adicionarFavoritos(${prod.id})">
-                                    <i class="bi bi-heart me-1"></i> Adicionar à Lista de Desejos
-                        </button>
+                                <i class="bi bi-heart me-1"></i> Adicionar à Lista de Desejos
+                            </button>`
+                    : ''}
                     </div>
                 </div>`;
 
@@ -277,14 +368,14 @@
             }
 
             const btnCarrinho = col.querySelector('.btn-add-carrinho');
-            btnCarrinho.addEventListener('click', () => adicionarCarrinho(prod.id));
+            btnCarrinho?.addEventListener('click', () => adicionarCarrinho(prod.id));
             const btnDesejos = col.querySelector('.btn-add-desejos');
 
-            btnCarrinho.addEventListener('click', () => {
+            btnCarrinho?.addEventListener('click', () => {
                 showToast(`"${prod.nome}" adicionado ao carrinho.`);
             });
 
-            btnDesejos.addEventListener('click', () => {
+            btnDesejos?.addEventListener('click', () => {
                 showToast(`"${prod.nome}" adicionado à lista de desejos.`);
             });
 
